@@ -49,6 +49,8 @@ function App() {
   const deleteTask = (id) =>{
     const tasksFilter = tasks.filter(task => task.id !== id);
     setTasks(tasksFilter);
+
+    sendMessage('success', 'Information', 'Task deleted successfully.', true, false);
   }
 
   const taskDeleteShowModal = (task) => {
@@ -64,7 +66,14 @@ function App() {
       cancelButtonText: 'No',
     };
 
-    Swal.fire(swalProperty);
+    Swal
+    .fire(swalProperty)
+    .then((result) => {
+      if(result.isConfirmed)
+      {
+        deleteTask(task.id);
+      }
+    });
   }
 
   const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton) => {
