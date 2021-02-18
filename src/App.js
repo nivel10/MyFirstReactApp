@@ -15,11 +15,19 @@ function App() {
 
   const successColor = "#53a451";
   const warningColor = "#f7c244";
+  const oneSecond = 1000;
+  const tenSecond = 10000;
 
   useEffect(() => {
     (async() =>{
+
+      sendMessage('info', 'Information', 'Procesing please wait...', tenSecond, false, true);
+
       const result = await getCollection("tasks");
-      console.log(result);
+      /*console.log(result);*/
+      setTasks(result.data);
+      Swal.close();
+
     })()
   }, []);
 
@@ -30,8 +38,9 @@ function App() {
         "warning",
         "Warning",
         "You must enter a description.",
-        false,
-        true
+        null,
+        true,
+        false
       );
       isValid = false;
     }
@@ -58,7 +67,8 @@ function App() {
       "success",
       "information",
       "Task added sucessfully.",
-      true,
+      oneSecond,
+      false,
       false
     );
   };
@@ -85,7 +95,8 @@ function App() {
       "success",
       "Information",
       "Task edited successfully.",
-      true,
+      oneSecond,
+      false,
       false
     );
   };
@@ -104,7 +115,8 @@ function App() {
       "success",
       "Information",
       "Task deleted successfully.",
-      true,
+      oneSecond,
+      false,
       false
     );
   };
@@ -129,13 +141,14 @@ function App() {
     });
   };
 
-  const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton) => {
+  const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton, timerProgressBar) => {
     const swalProperty = {
       icon: msgType,
       title: msgTitle,
       html: msgText,
-      timer: timer === true ? 1000 : null,
+      timer: timer !== null ? timer : null,
       showConfirmButton: confirmButton,
+      timerProgressBar: timerProgressBar,
     };
 
     Swal.fire(swalProperty);
