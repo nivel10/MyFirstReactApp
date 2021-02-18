@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import { isEmpty, size } from "lodash";
 import Swal from "sweetalert2";
-import shortid from "shortid";
+/*import shortid from "shortid";*/
 
 import TasksLogo from "./images/Tasks.png";
-import { getCollection } from "./dataBase/actions";
+import { addDocument, getCollection } from "./dataBase/actions";
 
 function App() {
   const [task, setTask] = useState("");
@@ -24,9 +24,13 @@ function App() {
       sendMessage('info', 'Information', 'Procesing please wait...', tenSecond, false, true);
 
       const result = await getCollection("tasks");
-      /*console.log(result);*/
-      setTasks(result.data);
-      Swal.close();
+      if(result.statusResponse){
+        setTasks(result.data);
+        Swal.close();
+      }else{
+        sendMessage('error', 'Error', result.error, null, true, false);
+        console.log(result);
+      }
 
     })()
   }, []);
@@ -47,7 +51,7 @@ function App() {
     return isValid;
   };
 
-  const addTask = (e) => {
+  const addTask = async (e) => {
     e.preventDefault();
 
     if (!validForm()) {
@@ -55,12 +59,22 @@ function App() {
     }
     /*console.log('Task');*/
 
-    const newTask = {
+    sendMessage('info', 'Information', 'Procesing please wait...', tenSecond, false, true);
+
+    const result = await addDocument("tasks", {name: task});
+    if(!result.statusResponse)
+    {
+      sendMessage('error', 'Error', result.error, null, true, false);
+      return;
+    }
+
+    /*const newTask = {
       id: shortid.generate(),
       name: task,
-    };
+    };*/
 
-    setTasks([...tasks, newTask]);
+    /*setTasks([...tasks, newTask]);*/
+    setTasks([...tasks, {id: result.data.id, name: task,}]);
     setTask("");
 
     sendMessage(
@@ -174,7 +188,7 @@ function App() {
                     <i className="text-success far fa-check-circle"></i>{" "}
                     {task.name}
                   </span>
-                  <a
+                  <button
                     className={
                       editMode
                         ? "btn btn-outline-danger btn-sm float-right mx-2 disabled"
@@ -183,8 +197,8 @@ function App() {
                     onClick={() => taskDeleteShowModal(task)}
                   >
                     <i className="fas fa-trash-alt"></i>
-                  </a>
-                  <a
+                  </button>
+                  <button
                     className={
                       editMode
                         ? "btn btn-outline-warning btn-sm float-right disabled"
@@ -193,7 +207,7 @@ function App() {
                     onClick={() => editTask(task)}
                   >
                     <i className="fas fa-edit"></i>
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
