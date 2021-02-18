@@ -175,10 +175,10 @@ function App() {
               ))}
             </ul>
           ) : (
-            <h6 className="text-center">
+            <li className="list-group-item">
               <i className="text-warning fas fa-exclamation-triangle"></i> No
               tasks have been added yet.
-            </h6>
+            </li>
           )}
         </div>
 
