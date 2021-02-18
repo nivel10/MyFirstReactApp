@@ -8,17 +8,14 @@ function App() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
   const [editMode, setEditMode] = useState(false);
-  const [id, setId] = useState("");
-
+  const [idTask, setIdTask] = useState("");
 
   const successColor = "#53a451";
   const warningColor = "#f7c244";
 
-  const addTask = (e) => {
-    e.preventDefault();
-
+  const validForm = () => {
+    let isValid = true;
     if (isEmpty(task)) {
-      console.log("Empty");
       sendMessage(
         "warning",
         "Warning",
@@ -26,6 +23,15 @@ function App() {
         false,
         true
       );
+      isValid = false;
+    }
+    return isValid;
+  };
+
+  const addTask = (e) => {
+    e.preventDefault();
+
+    if(!validForm()){
       return;
     }
     /*console.log('Task');*/
@@ -36,7 +42,6 @@ function App() {
     };
 
     setTasks([...tasks, newTask]);
-
     setTask("");
 
     sendMessage(
@@ -48,33 +53,36 @@ function App() {
     );
   };
 
-  const saveTask = (e) =>{
+  const saveTask = (e) => {
     e.preventDefault();
 
-    if(isEmpty(task))
-    {
-      sendMessage(
-        "warning",
-        "Warning",
-        "You must enter a description.",
-        false,
-        true
-      );
+    if(!validForm()){
       return;
     }
-    if(id !== "")
-    {
+
+    const editedTasks = tasks.map((item) =>
+      item.id === idTask ? { id: idTask, name: task } : item
+    );
+    setTasks(editedTasks);
+
+    if (idTask !== "") {
       setEditMode(false);
-      setId("");
+      setIdTask("");
       setTask("");
     }
 
-    sendMessage('success', 'Information', 'Task edited successfully.', true, false);
+    sendMessage(
+      "success",
+      "Information",
+      "Task edited successfully.",
+      true,
+      false
+    );
   };
 
   const editTask = (taskEdit) => {
     setEditMode(true);
-    setId(taskEdit.id);
+    setIdTask(taskEdit.id);
     setTask(taskEdit.name);
   };
 
@@ -141,28 +149,44 @@ function App() {
                     {task.name}
                   </span>
                   <a
-                    className={editMode ? "btn btn-outline-danger btn-sm float-right mx-2 disabled" : "btn btn-outline-danger btn-sm float-right mx-2"}
+                    className={
+                      editMode
+                        ? "btn btn-outline-danger btn-sm float-right mx-2 disabled"
+                        : "btn btn-outline-danger btn-sm float-right mx-2"
+                    }
                     onClick={() => taskDeleteShowModal(task)}
                   >
                     <i className="fas fa-trash-alt"></i>
                   </a>
-                  <a className={editMode ? "btn btn-outline-warning btn-sm float-right disabled" : "btn btn-outline-warning btn-sm float-right"}
-                    onClick={() => editTask(task)}>
+                  <a
+                    className={
+                      editMode
+                        ? "btn btn-outline-warning btn-sm float-right disabled"
+                        : "btn btn-outline-warning btn-sm float-right"
+                    }
+                    onClick={() => editTask(task)}
+                  >
                     <i className="fas fa-edit"></i>
                   </a>
                 </li>
               ))}
             </ul>
           ) : (
-            <h6 className="text-center"><i className="text-warning fas fa-exclamation-triangle"></i> No tasks have been added yet.</h6>
+            <h6 className="text-center">
+              <i className="text-warning fas fa-exclamation-triangle"></i> No
+              tasks have been added yet.
+            </h6>
           )}
-
         </div>
 
         <div className="col-md-4">
           <h4 className="text-center">{editMode ? "Edit Task" : "Add task"}</h4>
 
-          <form id="frmTaks" method="post" onSubmit={editMode ? saveTask : addTask}>
+          <form
+            id="frmTaks"
+            method="post"
+            onSubmit={editMode ? saveTask : addTask}
+          >
             <input
               className="form-control mb-2"
               type="text"
@@ -171,10 +195,16 @@ function App() {
               value={task}
             />
             <button
-              className={editMode ? "btn btn-outline-primary btn-sm float-right" : "btn btn-outline-success btn-sm float-right"}
+              className={
+                editMode
+                  ? "btn btn-outline-primary btn-sm float-right"
+                  : "btn btn-outline-success btn-sm float-right"
+              }
               type="submit"
             >
-              <i className={editMode ? "fas fa-save" : "fas fa-plus-circle" }></i>
+              <i
+                className={editMode ? "fas fa-save" : "fas fa-plus-circle"}
+              ></i>
             </button>
           </form>
         </div>
