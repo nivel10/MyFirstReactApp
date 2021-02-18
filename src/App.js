@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 
-import { isEmpty, map, size } from "lodash";
+import { isEmpty, size } from "lodash";
 import Swal from "sweetalert2";
 import shortid from "shortid";
 
 function App() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [id, setId] = useState("");
+
 
   const successColor = "#53a451";
   const warningColor = "#f7c244";
@@ -43,6 +46,36 @@ function App() {
       true,
       false
     );
+  };
+
+  const saveTask = (e) =>{
+    e.preventDefault();
+
+    if(isEmpty(task))
+    {
+      sendMessage(
+        "warning",
+        "Warning",
+        "You must enter a description.",
+        false,
+        true
+      );
+      return;
+    }
+    if(id !== "")
+    {
+      setEditMode(false);
+      setId("");
+      setTask("");
+    }
+
+    sendMessage('success', 'Information', 'Task edited successfully.', true, false);
+  };
+
+  const editTask = (taskEdit) => {
+    setEditMode(true);
+    setId(taskEdit.id);
+    setTask(taskEdit.name);
   };
 
   const deleteTask = (id) => {
@@ -83,7 +116,7 @@ function App() {
       icon: msgType,
       title: msgTitle,
       html: msgText,
-      timer: timer == true ? 1000 : null,
+      timer: timer === true ? 1000 : null,
       showConfirmButton: confirmButton,
     };
 
@@ -92,7 +125,7 @@ function App() {
 
   return (
     <div className="container mt-5">
-      <h1>Tasks</h1>
+      <h2>Tasks</h2>
       <hr />
 
       <div className="row">
@@ -108,13 +141,14 @@ function App() {
                     {task.name}
                   </span>
                   <a
-                    className="btn btn-outline-danger btn-sm float-right mx-2"
+                    className={editMode ? "btn btn-outline-danger btn-sm float-right mx-2 disabled" : "btn btn-outline-danger btn-sm float-right mx-2"}
                     onClick={() => taskDeleteShowModal(task)}
                   >
-                    <i className="far fa-trash-alt"></i>
+                    <i className="fas fa-trash-alt"></i>
                   </a>
-                  <a className="btn btn-outline-warning btn-sm float-right">
-                    <i className="far fa-edit"></i>
+                  <a className={editMode ? "btn btn-outline-warning btn-sm float-right disabled" : "btn btn-outline-warning btn-sm float-right"}
+                    onClick={() => editTask(task)}>
+                    <i className="fas fa-edit"></i>
                   </a>
                 </li>
               ))}
@@ -126,9 +160,9 @@ function App() {
         </div>
 
         <div className="col-md-4">
-          <h4 className="text-center">Form</h4>
+          <h4 className="text-center">{editMode ? "Edit Task" : "Add task"}</h4>
 
-          <form id="frmTaks" method="post" onSubmit={addTask}>
+          <form id="frmTaks" method="post" onSubmit={editMode ? saveTask : addTask}>
             <input
               className="form-control mb-2"
               type="text"
@@ -137,10 +171,10 @@ function App() {
               value={task}
             />
             <button
-              className="btn btn-outline-success btn-sm float-right"
+              className={editMode ? "btn btn-outline-primary btn-sm float-right" : "btn btn-outline-success btn-sm float-right"}
               type="submit"
             >
-              <i className="fas fa-plus-circle"></i>
+              <i className={editMode ? "fas fa-save" : "fas fa-plus-circle" }></i>
             </button>
           </form>
         </div>
