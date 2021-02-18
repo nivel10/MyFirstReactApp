@@ -1,36 +1,58 @@
 import React, { useState } from "react";
 
-import { isEmpty } from "lodash";
-import Swal  from "sweetalert2";
+import { isEmpty, map } from "lodash";
+import Swal from "sweetalert2";
+import shortid from "shortid";
 
 function App() {
   const [task, setTask] = useState("");
+  const [tasks, setTasks] = useState([]);
 
   const addTask = (e) => {
     e.preventDefault();
 
-    if(isEmpty(task)){
-      console.log('Empty')
-      sendMessage('warning', 'Warning', 'You must enter a description.', false, true);
+    if (isEmpty(task)) {
+      console.log("Empty");
+      sendMessage(
+        "warning",
+        "Warning",
+        "You must enter a description.",
+        false,
+        true
+      );
       return;
     }
-    console.log('Task');
-    sendMessage('success', 'information', 'Task added sucessfully.', true, false);
-    setTask('');
+    /*console.log('Task');*/
+
+    const newTask = {
+      id: shortid.generate(),
+      name: task,
+    };
+
+    setTasks([...tasks, newTask]);
+
+    setTask("");
+
+    sendMessage(
+      "success",
+      "information",
+      "Task added sucessfully.",
+      true,
+      false
+    );
   };
 
-  const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton) =>{
+  const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton) => {
     const swalProperty = {
       icon: msgType,
       title: msgTitle,
       html: msgText,
       timer: timer == true ? 1000 : null,
-      showConfirmButton: confirmButton, 
+      showConfirmButton: confirmButton,
     };
 
     Swal.fire(swalProperty);
-  }
-
+  };
 
   return (
     <div className="container mt-5">
@@ -41,15 +63,20 @@ function App() {
           <h4 className="text-center">Taks list</h4>
 
           <ul className="list-group">
-            <li className="list-group-item">
-              <spa className="lead">Task name</spa>
-              <a className="btn btn-outline-danger btn-sm float-right mx-2">
-                <i class="far fa-trash-alt"></i>
-              </a>
-              <a className="btn btn-outline-warning btn-sm float-right">
-                <i class="far fa-edit"></i>
-              </a>
-            </li>
+
+            {tasks.map((task) => (
+
+              <li className="list-group-item" key={task.id}>
+                <span className="lead"><i className="text-success far fa-check-circle"></i> {task.name}</span>
+                <a className="btn btn-outline-danger btn-sm float-right mx-2">
+                  <i className="far fa-trash-alt"></i>
+                </a>
+                <a className="btn btn-outline-warning btn-sm float-right">
+                  <i className="far fa-edit"></i>
+                </a>
+              </li>
+
+            ))}
           </ul>
         </div>
 
@@ -68,7 +95,7 @@ function App() {
               className="btn btn-outline-success btn-sm float-right"
               type="submit"
             >
-              <i class="fas fa-plus-circle"></i>
+              <i className="fas fa-plus-circle"></i>
             </button>
           </form>
         </div>
