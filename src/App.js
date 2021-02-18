@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { isEmpty, size } from "lodash";
 import Swal from "sweetalert2";
 import shortid from "shortid";
 
 import TasksLogo from "./images/Tasks.png";
+import { getCollection } from "./dataBase/actions";
 
 function App() {
   const [task, setTask] = useState("");
@@ -14,6 +15,13 @@ function App() {
 
   const successColor = "#53a451";
   const warningColor = "#f7c244";
+
+  useEffect(() => {
+    (async() =>{
+      const result = await getCollection("tasks");
+      console.log(result);
+    })()
+  }, []);
 
   const validForm = () => {
     let isValid = true;
@@ -33,7 +41,7 @@ function App() {
   const addTask = (e) => {
     e.preventDefault();
 
-    if(!validForm()){
+    if (!validForm()) {
       return;
     }
     /*console.log('Task');*/
@@ -58,7 +66,7 @@ function App() {
   const saveTask = (e) => {
     e.preventDefault();
 
-    if(!validForm()){
+    if (!validForm()) {
       return;
     }
 
@@ -135,8 +143,10 @@ function App() {
 
   return (
     <div className="container mt-5">
-      <h2><img src={TasksLogo} alt="Task" height="70px" width="70px"/> Tasks</h2>
-      
+      <h2>
+        <img src={TasksLogo} alt="Task" height="70px" width="70px" /> Tasks
+      </h2>
+
       <hr />
 
       <div className="row">
