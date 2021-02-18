@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
-import { isEmpty, map } from "lodash";
+import { isEmpty, map, size } from "lodash";
 import Swal from "sweetalert2";
 import shortid from "shortid";
 
 function App() {
-
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
 
@@ -46,35 +45,38 @@ function App() {
     );
   };
 
-  const deleteTask = (id) =>{
-    const tasksFilter = tasks.filter(task => task.id !== id);
+  const deleteTask = (id) => {
+    const tasksFilter = tasks.filter((task) => task.id !== id);
     setTasks(tasksFilter);
 
-    sendMessage('success', 'Information', 'Task deleted successfully.', true, false);
-  }
+    sendMessage(
+      "success",
+      "Information",
+      "Task deleted successfully.",
+      true,
+      false
+    );
+  };
 
   const taskDeleteShowModal = (task) => {
     const swalProperty = {
-      icon: 'warning',
-      title: 'Are you shure delete this?',
-      html: 'Task: <b>' + task.name + '</b>',
+      icon: "warning",
+      title: "Are you shure delete this?",
+      html: "Task: <b>" + task.name + "</b>",
       timer: null,
       confirmButtonColor: warningColor,
-      confirmButtonText: 'Yes',
+      confirmButtonText: "Yes",
       showCancelButton: true,
       cancelButtonColor: successColor,
-      cancelButtonText: 'No',
+      cancelButtonText: "No",
     };
 
-    Swal
-    .fire(swalProperty)
-    .then((result) => {
-      if(result.isConfirmed)
-      {
+    Swal.fire(swalProperty).then((result) => {
+      if (result.isConfirmed) {
         deleteTask(task.id);
       }
     });
-  }
+  };
 
   const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton) => {
     const swalProperty = {
@@ -91,29 +93,36 @@ function App() {
   return (
     <div className="container mt-5">
       <h1>Tasks</h1>
-      <hr/>
+      <hr />
 
       <div className="row">
         <div className="col-md-8">
           <h4 className="text-center">Taks list</h4>
 
-          <ul className="list-group">
+          {size(tasks) > 0 ? (
+            <ul className="list-group">
+              {tasks.map((task) => (
+                <li className="list-group-item" key={task.id}>
+                  <span className="lead">
+                    <i className="text-success far fa-check-circle"></i>{" "}
+                    {task.name}
+                  </span>
+                  <a
+                    className="btn btn-outline-danger btn-sm float-right mx-2"
+                    onClick={() => taskDeleteShowModal(task)}
+                  >
+                    <i className="far fa-trash-alt"></i>
+                  </a>
+                  <a className="btn btn-outline-warning btn-sm float-right">
+                    <i className="far fa-edit"></i>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <h6 className="text-center"><i className="text-warning fas fa-exclamation-triangle"></i> No tasks have been added yet.</h6>
+          )}
 
-            {tasks.map((task) => (
-
-              <li className="list-group-item" key={task.id}>
-                <span className="lead"><i className="text-success far fa-check-circle"></i> {task.name}</span>
-                <a className="btn btn-outline-danger btn-sm float-right mx-2"
-                  onClick={() => taskDeleteShowModal(task)}>
-                  <i className="far fa-trash-alt"></i>
-                </a>
-                <a className="btn btn-outline-warning btn-sm float-right">
-                  <i className="far fa-edit"></i>
-                </a>
-              </li>
-
-            ))}
-          </ul>
         </div>
 
         <div className="col-md-4">
