@@ -1,5 +1,7 @@
-import { isEmpty } from "lodash";
 import React, { useState } from "react";
+
+import { isEmpty } from "lodash";
+import Swal  from "sweetalert2";
 
 function App() {
   const [task, setTask] = useState("");
@@ -9,11 +11,26 @@ function App() {
 
     if(isEmpty(task)){
       console.log('Empty')
+      sendMessage('warning', 'Warning', 'You must enter a description.', false, true);
       return;
     }
     console.log('Task');
+    sendMessage('success', 'information', 'Task added sucessfully.', true, false);
     setTask('');
   };
+
+  const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton) =>{
+    const swalProperty = {
+      icon: msgType,
+      title: msgTitle,
+      html: msgText,
+      timer: timer == true ? 1000 : null,
+      showConfirmButton: confirmButton, 
+    };
+
+    Swal.fire(swalProperty);
+  }
+
 
   return (
     <div className="container mt-5">
