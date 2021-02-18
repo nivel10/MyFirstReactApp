@@ -4,6 +4,8 @@ import { isEmpty, size } from "lodash";
 import Swal from "sweetalert2";
 import shortid from "shortid";
 
+import TasksLogo from "./images/Tasks.png";
+
 function App() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
@@ -133,7 +135,8 @@ function App() {
 
   return (
     <div className="container mt-5">
-      <h2>Tasks</h2>
+      <h2><img src={TasksLogo} alt="Task" height="70px" width="70px"/> Tasks</h2>
+      
       <hr />
 
       <div className="row">
