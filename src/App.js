@@ -5,7 +5,12 @@ import Swal from "sweetalert2";
 /*import shortid from "shortid";*/
 
 import TasksLogo from "./images/Tasks.png";
-import { addDocument, getCollection, updateDocumentbyId } from "./dataBase/actions";
+import {
+  addDocument,
+  deleteDocumentById,
+  getCollection,
+  updateDocumentbyId,
+} from "./dataBase/actions";
 
 function App() {
   const [task, setTask] = useState("");
@@ -18,21 +23,27 @@ function App() {
   const oneSecond = 1000;
   const tenSecond = 10000;
 
+  /* Load page */
   useEffect(() => {
-    (async() =>{
-
-      sendMessage('info', 'Information', 'Procesing please wait...', tenSecond, false, true);
+    (async () => {
+      sendMessage(
+        "info",
+        "Information",
+        "Procesing please wait...",
+        tenSecond,
+        false,
+        true
+      );
 
       const result = await getCollection("tasks");
-      if(result.statusResponse){
+      if (result.statusResponse) {
         setTasks(result.data);
         Swal.close();
-      }else{
-        sendMessage('error', 'Error', result.error, null, true, false);
+      } else {
+        sendMessage("error", "Error", result.error, null, true, false);
         console.log(result);
       }
-
-    })()
+    })();
   }, []);
 
   const validForm = () => {
@@ -59,12 +70,18 @@ function App() {
     }
     /*console.log('Task');*/
 
-    sendMessage('info', 'Information', 'Procesing please wait...', tenSecond, false, true);
+    sendMessage(
+      "info",
+      "Information",
+      "Procesing please wait...",
+      tenSecond,
+      false,
+      true
+    );
 
-    const result = await addDocument("tasks", {name: task});
-    if(!result.statusResponse)
-    {
-      sendMessage('error', 'Error', result.error, null, true, false);
+    const result = await addDocument("tasks", { name: task });
+    if (!result.statusResponse) {
+      sendMessage("error", "Error", result.error, null, true, false);
       return;
     }
 
@@ -74,7 +91,7 @@ function App() {
     };*/
 
     /*setTasks([...tasks, newTask]);*/
-    setTasks([...tasks, {id: result.data.id, name: task,}]);
+    setTasks([...tasks, { id: result.data.id, name: task }]);
     setTask("");
 
     sendMessage(
@@ -94,11 +111,18 @@ function App() {
       return;
     }
 
-    sendMessage('info', 'Information', 'Procesing please wait...', tenSecond, false, true);
+    sendMessage(
+      "info",
+      "Information",
+      "Procesing please wait...",
+      tenSecond,
+      false,
+      true
+    );
 
-    const resul = await updateDocumentbyId("tasks", idTask, {name: task,});
-    if(!resul.statusResponse){
-      sendMessage('error', 'Error', resul.error, null, true, false);
+    const resul = await updateDocumentbyId("tasks", idTask, { name: task });
+    if (!resul.statusResponse) {
+      sendMessage("error", "Error", resul.error, null, true, false);
       return;
     }
 
@@ -129,7 +153,23 @@ function App() {
     setTask(taskEdit.name);
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = async (id) => {
+    sendMessage(
+      "info",
+      "Information",
+      "Procesing please wait...",
+      tenSecond,
+      false,
+      true
+    );
+
+    const result = await deleteDocumentById("tasks", id);
+
+    if (!result.statusResponse) {
+      sendMessage("error", "Error", result.error, null, true, false);
+      return;
+    }
+
     const tasksFilter = tasks.filter((task) => task.id !== id);
     setTasks(tasksFilter);
 
@@ -163,7 +203,14 @@ function App() {
     });
   };
 
-  const sendMessage = (msgType, msgTitle, msgText, timer, confirmButton, timerProgressBar) => {
+  const sendMessage = (
+    msgType,
+    msgTitle,
+    msgText,
+    timer,
+    confirmButton,
+    timerProgressBar
+  ) => {
     const swalProperty = {
       icon: msgType,
       title: msgTitle,

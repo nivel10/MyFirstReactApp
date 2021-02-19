@@ -56,3 +56,15 @@ export const updateDocumentbyId = async (collection, id, data) => {
   }
   return result;
 }
+
+/* Delete Document by Id */
+export const deleteDocumentById = async(collection, id) => {
+  const result = {statusResponse: false, data: null, error: null};
+  try {
+    await db.collection(collection).doc(id).delete();
+    result.statusResponse = true;
+  } catch (ex) {
+    result.error = ex;
+  } 
+  return result;
+}
