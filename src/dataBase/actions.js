@@ -31,3 +31,28 @@ export const addDocument = async (collection, data) => {
   }
   return result;
 };
+
+/* Get Document by Id */
+export const getDocumentById = async (collection, id) => {
+  const result = {statusResponse: false, data: null, error: null,};
+  try {
+    const response = await db.collection(collection).doc(id).get();
+    result.data = {id: response.id, ...response.data(),};
+    result.statusResponse = true;
+  } catch (ex) {
+    result.error = ex;
+  }
+  return result;
+};
+
+/* Update Document by Id */
+export const updateDocumentbyId = async (collection, id, data) => {
+  const result = {statusResponse: false, data: null, error: null};
+  try {
+    await db.collection(collection).doc(id).update(data);
+    result.statusResponse = true;
+  } catch (ex) {
+    result.error = ex;
+  }
+  return result;
+}

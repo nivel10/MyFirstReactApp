@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 /*import shortid from "shortid";*/
 
 import TasksLogo from "./images/Tasks.png";
-import { addDocument, getCollection } from "./dataBase/actions";
+import { addDocument, getCollection, updateDocumentbyId } from "./dataBase/actions";
 
 function App() {
   const [task, setTask] = useState("");
@@ -87,10 +87,18 @@ function App() {
     );
   };
 
-  const saveTask = (e) => {
+  const saveTask = async (e) => {
     e.preventDefault();
 
     if (!validForm()) {
+      return;
+    }
+
+    sendMessage('info', 'Information', 'Procesing please wait...', tenSecond, false, true);
+
+    const resul = await updateDocumentbyId("tasks", idTask, {name: task,});
+    if(!resul.statusResponse){
+      sendMessage('error', 'Error', resul.error, null, true, false);
       return;
     }
 
