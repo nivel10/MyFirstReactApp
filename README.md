@@ -1,14 +1,12 @@
 ## Sweetalert-2 Installation: </br>
 run in the console the following command:
-###### `npm install sweetalert2-react` </b>
+###### `npm install sweetalert2-react`
 
 Example:
-
 ###### `const swalProperty = {icon: 'success', title: 'Hello', html: 'Hey <b> world </b> ... !!!', timer: 1500, showConfirmButton: true,};`
-     
 ###### `Swal.fire (swalProperty);`
 
-source: https://sweetalert2.github.io/
+source: [SweetAlert 2](https://sweetalert2.github.io/)
 
 ## FontAwesome installation:
 Add the CDN reference to the index (.hmtl)
@@ -19,8 +17,7 @@ Add the CDN reference to the index (.hmtl)
 Example:
  ###### `<buttom id = "btnSave" className = "btn btn-outline-primary"> <i class = "fas fa-save"> </i> </buttom>`
 
-Source: https://fontawesome.com/
-
+Source: [FontAwesome](https://fontawesome.com/)
 
 # Getting Started with Create React App
 
