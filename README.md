@@ -12,7 +12,7 @@ source: [SweetAlert 2](https://sweetalert2.github.io/)
 Add the CDN reference to the index (.hmtl)
 
 ###### `<!-FontAwesome->`
-###### `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">`
+###### `<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>`
 
 Example:
  ###### `<buttom id = "btnSave" className = "btn btn-outline-primary"> <i class = "fas fa-save"> </i> </buttom>`
